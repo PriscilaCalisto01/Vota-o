@@ -1,0 +1,80 @@
+pragma  solidity 0.4.25;
+contract Votacaogremio {
+    struct Proposta {
+        string texto; Votação de escolha do gremio estudantil. 
+        address proponente;
+        uint quotaDeVotos;
+        bool existe;
+    }
+    struct Votante {
+        address conta;
+        uint quotaDeVotos;
+        bool votou;
+        bool existe;
+    }
+    modifier somenteChairman() {
+        require(chairman == msg.sender, "Só o Chairmain pode realizar essa operação");
+        _;
+    }
+    //Informações gerais da votacao
+    Gremio[colocar aqui as salas a serem escolhidas] Gremios;
+    mapping (address =>Votante) Alunos;
+    address chairman;
+    uint dataInicioVotacao;
+    uint dataFimVotacao;
+    string anoExercicio;
+    constructor (string qualAnoExercicio, uint qualDataFimVotacao) public {
+        chairman = msg.sender;
+        dataFimVotacao = qualDataFimVotacao;
+        anoExercicio = qualAnoExercicio;
+    }
+    function incluiVotante(address SalaVotante, uint quotaDeVotos) public somenteChairman {
+        require(quotaDeVotos <= 99, "Quota nao pode ser superior a 99%");
+        require(SalaVotante != address(0), "O votante deve ter uma sala valida");
+        Votante memory novoVotante = Votante(SalaVotante, quotaDeVotos, false, true);
+        votantes[SalaVotante] = novoVotante;
+    }
+    function Saladogremio(string qualSaladoGremio, address qualAno, uint qualQuotaMinimaParaAprovacao) public somenteChairman {
+        Proposta memory SalaGremio = Proposta(QualSalaGremio, qualAnoGremio, 0, qualQuotaMinimaParaAprovacao, true);
+        propostas.push(NovoGremio);
+    }
+    function pesquisarGremio(uint SalaGremio) public view returns (string, address, uint, uint)  {
+        Proposta memory propostaTemporario = propostas[numeroProposta];
+        if (propostaTemporario.existe) {
+            return (propostaTemporario.texto, propostaTemporario.proponente, propostaTemporario.quotaDeVotos, propostaTemporario.quotaMinimaParaAprovacao);
+        } else {
+            return ("", 0, 0, 0);
+        }
+    }
+    function totalDeGremios() public view returns (uint) {
+        return Gremisos.length;
+    }
+    function qualAnoExercicio() public view returns (string) {
+        return anoExercicio;
+    }
+    function GremioVencedor(uint SalaGremio) public view returns (bool)  {
+        Gremio memory = Gremio[SalaGremio];
+        if (propostaTemporario.existe) {
+            return propostaTemporario.quotaDeVotos>=propostaTemporario.quotaMinimaParaAprovacao;
+        } else {
+            return false;
+        }
+    }
+    function quandoEncerraVotacao() public view returns (uint) {
+        return dataFimVotacao;
+    }
+    function votar(uint SalaGremio, bool VotoGremio) public returns (bool) {
+        require(dataFimVotacao>=now, "Votacao encerrada");
+        Proposta storage propostaTemporario = Gremio[SalaGremio];
+        if (propostaTemporario.existe) {
+            Votante storage votanteTemporario = Alunos[msg.sender];
+            if (votanteTemporario.existe == true) {
+                if (votanteTemporario.votou == false) {
+                    if (favoravelASala == true) {
+                        propostaTemporario.quotaDeVotos = propostaTemporario.quotaDeVotos + votanteTemporario.quotaDeVotos;
+                    }
+                    votanteTemporario.votou = true;
+                    return true;
+                } 
+            } 
+        } 
